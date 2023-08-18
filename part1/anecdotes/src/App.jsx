@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 
-const Button = ({selectAnecdote}) => {
+const Button = ({handleEvent, text}) => {
   return (
-    <button onClick={selectAnecdote}>
-      next anecdote
+    <button onClick={handleEvent}>
+      {text}
     </button>
   )
 
@@ -24,16 +24,30 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Uint8Array(8))
 
   const handleSelectAnecdote = () => setSelected(Math.floor(Math.random()*anecdotes.length))
 
-  console.log(selected)
+  const addVote = () => {
+
+
+
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
+
+    console.log(copy)
+
+
+  }
 
   return (
     <div>
       {anecdotes[selected]}
-      <br></br>
-      <Button selectAnecdote={handleSelectAnecdote}/>
+
+      <p>has {votes[selected]} votes.</p>
+      <Button handleEvent={addVote} text="Vote" />
+      <Button handleEvent={handleSelectAnecdote} text="next anecdote"/>
     </div>
   )
 }
