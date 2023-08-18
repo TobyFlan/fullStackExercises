@@ -10,6 +10,26 @@ const Button = ({handleEvent, text}) => {
 
 }
 
+const MostVotes = ({anecdotes, votes}) => {
+
+  var max = 0;
+  var maxIndex = 0;
+  votes.forEach((item) => {
+
+    if(item > max){
+      max = item
+      maxIndex = votes.indexOf(item);
+    }
+
+  })
+
+  return(
+
+    <p>{anecdotes[maxIndex]}</p>
+
+  )
+
+}
 
 const App = () => {
   const anecdotes = [
@@ -43,11 +63,15 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
 
       <p>has {votes[selected]} votes.</p>
       <Button handleEvent={addVote} text="Vote" />
       <Button handleEvent={handleSelectAnecdote} text="next anecdote"/>
+
+      <h1>Anecdote with most votes</h1>
+      <MostVotes anecdotes={anecdotes} votes={votes}/>
     </div>
   )
 }
