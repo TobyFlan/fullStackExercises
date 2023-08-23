@@ -4,9 +4,11 @@ const App = () => {
   const [persons, setPersons] = useState([
     { 
       name: 'Arto Hellas',
+      number: '0800-111-111'
     },
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const addPerson = (event) => {
 
@@ -15,6 +17,7 @@ const App = () => {
     const personObject = {
 
       name: newName,
+      number: newNumber
 
     }
 
@@ -22,8 +25,9 @@ const App = () => {
 
       if(persons[i].name === personObject.name){
         //issue alert
-        alert(`${newName} is already added to phonebook`)        
+        alert(`${newName} is already added to phonebook`)
         setNewName('')
+        setNewNumber('')
         return
       }
 
@@ -31,12 +35,19 @@ const App = () => {
 
     setPersons(persons.concat(personObject))
     setNewName('')
+    setNewNumber('')
     
   }
 
   const handleNewPerson = (event) => {
 
     setNewName(event.target.value);
+
+  }
+
+  const handleNewNumber = (event) => {
+
+    setNewNumber(event.target.value);
 
   }
 
@@ -48,13 +59,16 @@ const App = () => {
           name: <input value={newName} onChange={handleNewPerson}/>
         </div>
         <div>
+          number: <input value={newNumber} onChange={handleNewNumber}/>
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <div>
         <ul>
-          {persons.map((persons) => <li key = {persons.name}> {persons.name} </li>)}
+          {persons.map((persons) => <li key = {persons.name}> <span>{persons.name} {persons.number}</span> </li>)}
         </ul>
       </div>
     </div>
