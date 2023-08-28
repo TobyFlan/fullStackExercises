@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
+import personService from './services/people'
 import EditFilter from './components/EditFilter'
 import AddNewNumbers from './components/AddNewNumbers'
 import ListFilter from './components/ListFilter'
@@ -12,8 +12,8 @@ const App = () => {
 
   useEffect(() => {
 
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         setPersons(response.data)
       })

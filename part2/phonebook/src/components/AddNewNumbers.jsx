@@ -1,4 +1,4 @@
-import axios from 'axios'
+import personService from '../services/people'
 import { useState } from 'react'
 
 const AddNewNumbers = ({ persons, setPersons }) => {
@@ -39,9 +39,10 @@ const AddNewNumbers = ({ persons, setPersons }) => {
         }
   
       }
-      console.log(`adding new person ${personObject}`)
-      axios
-        .post('http://localhost:3001/persons',personObject)
+      
+
+      personService
+        .create(personObject)
         .then(response => {
           setPersons(persons.concat(response.data))
           setNewName('')
