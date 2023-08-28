@@ -31,10 +31,23 @@ const AddNewNumbers = ({ persons, setPersons }) => {
       for(var i = 0; i < persons.length; i++){
   
         if(persons[i].name === personObject.name){
-          //issue alert
-          alert(`${newName} is already added to phonebook`)
-          setNewName('')
-          setNewNumber('')
+          //want to ask them if they want to change the number
+          if(window.confirm(`${personObject.name} is already added to phonebook, reaplce the old number with a new one?`)){
+
+            personService
+              .update(persons[i].id, personObject)
+              .then(response => {
+                setPersons(persons.map(p => 
+                  p.id !== persons[i].id ?
+                  p : response.data))
+              })
+            setNewName('')
+            setNewNumber('')
+
+          } else {
+            setNewName('')
+            setNewNumber('')
+          }
           return
         }
   
@@ -48,7 +61,7 @@ const AddNewNumbers = ({ persons, setPersons }) => {
           setNewName('')
           setNewNumber('')
         })
-        
+
     }
   
     return(
