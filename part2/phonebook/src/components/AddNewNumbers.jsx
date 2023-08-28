@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState } from 'react'
 
 const AddNewNumbers = ({ persons, setPersons }) => {
@@ -38,10 +39,17 @@ const AddNewNumbers = ({ persons, setPersons }) => {
         }
   
       }
+      console.log(`adding new person ${personObject}`)
+      axios
+        .post('http://localhost:3001/persons',personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
   
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      
+
       
     }
   
