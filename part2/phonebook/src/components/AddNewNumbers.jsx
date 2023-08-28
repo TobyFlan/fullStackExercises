@@ -48,10 +48,7 @@ const AddNewNumbers = ({ persons, setPersons }) => {
           setNewName('')
           setNewNumber('')
         })
-  
-      
-
-      
+        
     }
   
     return(

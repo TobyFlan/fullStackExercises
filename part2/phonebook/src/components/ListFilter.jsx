@@ -11,7 +11,7 @@ const ListFilter = (props) => {
         {toDisplay.map((persons) => 
           <li key = {persons.name}> 
             <span>
-              {persons.name} {persons.number}
+              {persons.name} {persons.number} <button onClick={()=>props.deletePerson(persons.id)}>delete</button>
             </span> 
           </li>
         )}
