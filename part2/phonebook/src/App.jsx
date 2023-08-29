@@ -1,14 +1,30 @@
 import { useState, useEffect } from 'react'
 
+import './index.css'
+
 import personService from './services/people'
 import EditFilter from './components/EditFilter'
 import AddNewNumbers from './components/AddNewNumbers'
 import ListFilter from './components/ListFilter'
 
+const Notification = ({ message, errType }) => {
+
+  if(message === null){
+    return null;
+  }
+
+  return (
+    <div className={errType}>
+      {message}
+    </div>
+  )
+
+}
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newFilter, setNewFilter] = useState('')
+  const [newMessage, setNewMessage] = useState(null)
 
   useEffect(() => {
 
@@ -31,14 +47,20 @@ const App = () => {
  
       setPersons(persons.filter(p => p.id !== id))
 
+      setNewMessage(() => `Deleted ${name}`)
+      setTimeout(() => {
+        setNewMessage(() => (null))
+      }, 3000)
+
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={newMessage} errType={'added'} />
       <EditFilter newFilter={newFilter} handleFilter={setNewFilter}/>
-      <AddNewNumbers persons={persons} setPersons={setPersons}/>
+      <AddNewNumbers persons={persons} setPersons={setPersons} setNewMessage={setNewMessage} />
       <ListFilter persons = {persons} filter = {newFilter} deletePerson = {deletePerson}/>
     </div>
   )

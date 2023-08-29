@@ -1,9 +1,11 @@
 import personService from '../services/people'
 import { useState } from 'react'
 
-const AddNewNumbers = ({ persons, setPersons }) => {
+
+const AddNewNumbers = ({ persons, setPersons, setNewMessage }) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
+
   
     const handleNewPerson = (event) => {
   
@@ -43,6 +45,10 @@ const AddNewNumbers = ({ persons, setPersons }) => {
               })
             setNewName('')
             setNewNumber('')
+            setNewMessage(`Changed the number of ${persons[i].name}`)
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 3000)
 
           } else {
             setNewName('')
@@ -60,6 +66,10 @@ const AddNewNumbers = ({ persons, setPersons }) => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewNumber('')
+          setNewMessage(`Added ${personObject.name}`)
+          setTimeout(() => {
+            setNewMessage(null)
+          }, 3000)
         })
 
     }
