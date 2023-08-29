@@ -2,7 +2,7 @@ import personService from '../services/people'
 import { useState } from 'react'
 
 
-const AddNewNumbers = ({ persons, setPersons, setNewMessage }) => {
+const AddNewNumbers = ({ persons, setPersons, setNewMessage, setErrorMessage}) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
 
@@ -42,13 +42,22 @@ const AddNewNumbers = ({ persons, setPersons, setNewMessage }) => {
                 setPersons(persons.map(p => 
                   p.id !== persons[i].id ?
                   p : response.data))
+                  setNewMessage(`Changed the number of ${persons[i].name}`)
+                  setTimeout(() => {
+                    setNewMessage(null)
+                  }, 3000)
+                
               })
+              //if entry is no longer in database
+              .catch(() => {
+                setErrorMessage(`Information of ${personObject.name} has already been removed from server`)
+                setTimeout(() => {
+                  setErrorMessage(null)
+                }, 3000)
+              })
+
             setNewName('')
             setNewNumber('')
-            setNewMessage(`Changed the number of ${persons[i].name}`)
-            setTimeout(() => {
-              setNewMessage(null)
-            }, 3000)
 
           } else {
             setNewName('')

@@ -25,6 +25,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newFilter, setNewFilter] = useState('')
   const [newMessage, setNewMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
 
@@ -43,14 +44,24 @@ const App = () => {
 
     if(window.confirm(`delete ${name}?`)){
 
-      personService.deletePerson(id)
- 
-      setPersons(persons.filter(p => p.id !== id))
+      personService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
 
-      setNewMessage(() => `Deleted ${name}`)
-      setTimeout(() => {
-        setNewMessage(() => (null))
-      }, 3000)
+          setNewMessage(() => `Deleted ${name}`)
+          setTimeout(() => {
+            setNewMessage(() => (null))
+          }, 3000)
+        })
+        .catch(() => {
+          setErrorMessage(`${name} has already been deleted from the server`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000)
+        })
+ 
+
 
     }
   }
@@ -58,9 +69,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} errType={'error'} />
       <Notification message={newMessage} errType={'added'} />
       <EditFilter newFilter={newFilter} handleFilter={setNewFilter}/>
-      <AddNewNumbers persons={persons} setPersons={setPersons} setNewMessage={setNewMessage} />
+      <AddNewNumbers persons={persons} setPersons={setPersons} setNewMessage={setNewMessage} setErrorMessage={setErrorMessage} />
       <ListFilter persons = {persons} filter = {newFilter} deletePerson = {deletePerson}/>
     </div>
   )
