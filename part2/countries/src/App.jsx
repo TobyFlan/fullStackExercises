@@ -8,7 +8,6 @@ const SearchBar = ({setNewFilter}) => {
   const [value, setValue] = useState('')
 
   const handleInput = (event) => {
-    console.log(`the box has become: ${event.target.value}`)
     setValue(event.target.value)
   }
 
@@ -69,7 +68,7 @@ const ExpandInfo = ({ country }) => {
         })
         .catch(
           null
-      )
+        )
     }
 
   }, [country])
@@ -77,13 +76,27 @@ const ExpandInfo = ({ country }) => {
   //skip the render if countryInfo has not yet been fetched
   if(countryInfo){
 
+    const languages = Object.values(countryInfo.languages);
+
     return (
 
       <div>
         <h2>{countryInfo.name.common}</h2>
-        <p>capital city: {countryInfo.capital}
-        <br></br>
-        area: {countryInfo.area}</p>
+        <p>
+          capital city: {countryInfo.capital}
+          <br></br>
+          area: {countryInfo.area}
+        </p>
+
+        <h3>languages:</h3>
+        <ul>
+            {languages.map((language, index) => 
+            <li key={index}>{language}</li>
+          )}
+        </ul>
+
+        <img src={countryInfo.flags.png} alt={countryInfo.flags.alt}></img>
+
       </div>
   
     )
