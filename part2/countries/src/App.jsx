@@ -31,19 +31,52 @@ const SearchBar = ({setNewFilter}) => {
 
 }
 
+//component to display filter results to the screen in li format
+const DisplayResults = ({ toDisplay }) => {
 
-//component to read the filter and gather results
-const DisplayResults = (props) => {
+  return(
+    <>
+      <h2>Countries</h2>
+      <ul>
+        {toDisplay.map(c => 
+            <li key={c}>
+              {c}
+            </li>
+          )}
 
-  return null
+      </ul>
+    </>
+  )
 
 }
+
+
+//component to read the filter and gather results due to the filter
+const FilterResults = ({ allNames, newFilter }) => {
+
+  const toDisplay = allNames.filter(c => c.includes(newFilter))
+
+  if(toDisplay.length === 0){
+    return(<p>No countries match your filter.</p>)
+  }
+
+  if(toDisplay.length <= 10){
+    return (
+      
+        <DisplayResults toDisplay = {toDisplay} />
+
+      )
+  }
+
+  return(<p>Too many matches. Specify another filter.</p>)
+
+}
+
 
 
 function App() {
 
   const [newFilter, setNewFilter] = useState('')
-
 
   //test getting all api results
   const [allNames, setAllNames] = useState([])
@@ -55,16 +88,22 @@ function App() {
     axios
     .get('https://studies.cs.helsinki.fi/restcountries/api/all')
     .then(response => {
-      setAllNames(response.data.map(n => n.name.common))
+      setAllNames(response.data.map(n => n.name.common.toLowerCase()))
+    })
+    .catch(() => {
+      console.log(`error: there was a problem getting country names from the helsinki API`)
     })
 
   }, [])
 
 
+  
+
 
   return (
     <div>
       <SearchBar setNewFilter={setNewFilter}/>
+      <FilterResults allNames = {allNames} newFilter = {newFilter} />
     </div>
   )
 
