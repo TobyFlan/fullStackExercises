@@ -50,14 +50,69 @@ const DisplayResults = ({ toDisplay }) => {
 
 }
 
+//component to return expanded info about a single country query
+const ExpandInfo = ({ country }) => {
+
+  const [countryInfo, setCountryInfo] = useState(null)
+
+
+  useEffect(() => {
+    //get country info and store into array
+    console.log(`changing country to ${country}`)
+
+    // skip if country not defined
+    if(country){
+      axios
+        .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country}`)
+        .then((response) => {
+          setCountryInfo(response.data)
+        })
+        .catch(
+          null
+      )
+    }
+
+  }, [country])
+
+  //skip the render if countryInfo has not yet been fetched
+  if(countryInfo){
+
+    return (
+
+      <div>
+        <h2>{countryInfo.name.common}</h2>
+        <p>capital city: {countryInfo.capital}
+        <br></br>
+        area: {countryInfo.area}</p>
+      </div>
+  
+    )
+
+  }
+
+
+
+
+}
 
 //component to read the filter and gather results due to the filter
 const FilterResults = ({ allNames, newFilter }) => {
+
 
   const toDisplay = allNames.filter(c => c.includes(newFilter))
 
   if(toDisplay.length === 0){
     return(<p>No countries match your filter.</p>)
+  }
+
+  //if there is only one entry to display, give expanded response
+  if(toDisplay.length === 1){
+
+    return(
+    
+      <ExpandInfo country = {toDisplay[0]} />
+    
+    )
   }
 
   if(toDisplay.length <= 10){
@@ -86,18 +141,15 @@ function App() {
   useEffect(() => {
 
     axios
-    .get('https://studies.cs.helsinki.fi/restcountries/api/all')
-    .then(response => {
-      setAllNames(response.data.map(n => n.name.common.toLowerCase()))
-    })
-    .catch(() => {
-      console.log(`error: there was a problem getting country names from the helsinki API`)
-    })
+      .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+      .then(response => {
+        setAllNames(response.data.map(n => n.name.common.toLowerCase()))
+      })
+      .catch(() => {
+        console.log(`error: there was a problem getting country names from the helsinki API`)
+      })
 
-  }, [])
-
-
-  
+  }, [])  
 
 
   return (
