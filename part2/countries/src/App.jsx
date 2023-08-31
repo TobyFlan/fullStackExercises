@@ -34,7 +34,8 @@ const SearchBar = ({setNewFilter}) => {
 const ExpandInfo = ({ country }) => {
 
   const [countryInfo, setCountryInfo] = useState(null)
-
+  const [weatherInfo, setWeatherInfo] = useState(null)
+  const weather_key = import.meta.env.VITE_SOME_KEY
 
   useEffect(() => {
     //get country info and store into array
@@ -42,6 +43,7 @@ const ExpandInfo = ({ country }) => {
 
     // skip if country not defined
     if(country){
+      //get data for country
       axios
         .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country}`)
         .then((response) => {
@@ -51,14 +53,27 @@ const ExpandInfo = ({ country }) => {
           null
         )
     }
-
   }, [country])
 
+  useEffect(() => {
+    if(countryInfo){
+      //get the weather data for the country
+      axios
+        .get(`https://api.openweathermap.org/data/2.5/weather?q=${countryInfo.capital}&appid=${weather_key}`)
+        .then((response) => {
+          setWeatherInfo(response.data)
+        })
+        .catch(
+          null
+        )
+    }
+  }, [countryInfo])
+
+
   //skip the render if countryInfo has not yet been fetched
-  if(countryInfo){
+  if(countryInfo && weatherInfo){
 
     const languages = Object.values(countryInfo.languages);
-
     return (
 
       <div>
@@ -77,6 +92,11 @@ const ExpandInfo = ({ country }) => {
         </ul>
 
         <img src={countryInfo.flags.png} alt={countryInfo.flags.alt}></img>
+
+        <h2>Weather in {countryInfo.capital}</h2>
+        <p>temperature {(weatherInfo.main.temp - 273.15).toFixed(2)} Celcius</p>
+        <img src={`https://openweathermap.org/img/wn/${weatherInfo.weather[0].icon}@2x.png`}></img>
+        <p>wind {weatherInfo.wind.speed} m/s</p>
 
       </div>
   
