@@ -30,25 +30,6 @@ const SearchBar = ({setNewFilter}) => {
 
 }
 
-//component to display filter results to the screen in li format
-const DisplayResults = ({ toDisplay }) => {
-
-  return(
-    <>
-      <h2>Countries</h2>
-      <ul>
-        {toDisplay.map(c => 
-            <li key={c}>
-              {c}
-            </li>
-          )}
-
-      </ul>
-    </>
-  )
-
-}
-
 //component to return expanded info about a single country query
 const ExpandInfo = ({ country }) => {
 
@@ -104,15 +85,23 @@ const ExpandInfo = ({ country }) => {
   }
 
 
-
-
 }
 
 //component to read the filter and gather results due to the filter
 const FilterResults = ({ allNames, newFilter }) => {
+  
+  const [toDisplay, setToDisplay] = useState([])
 
 
-  const toDisplay = allNames.filter(c => c.includes(newFilter))
+  useEffect(() => {
+    setToDisplay(allNames.filter(c => c.includes(newFilter)))
+  }, [newFilter])
+
+
+  const handleButtonClick = (country) => {
+    setToDisplay([country])
+  }
+
 
   if(toDisplay.length === 0){
     return(<p>No countries match your filter.</p>)
@@ -130,10 +119,22 @@ const FilterResults = ({ allNames, newFilter }) => {
 
   if(toDisplay.length <= 10){
     return (
-      
-        <DisplayResults toDisplay = {toDisplay} />
 
-      )
+      <>
+        <h2>Countries</h2>
+        <ul>
+          {toDisplay.map((c, index) => 
+              <li key={index}>
+                {c}
+                <button onClick={() => handleButtonClick(c)}>show</button>
+              </li>
+          )}
+  
+        </ul>
+      </>
+
+    )
+      
   }
 
   return(<p>Too many matches. Specify another filter.</p>)
@@ -168,7 +169,7 @@ function App() {
   return (
     <div>
       <SearchBar setNewFilter={setNewFilter}/>
-      <FilterResults allNames = {allNames} newFilter = {newFilter} />
+      <FilterResults allNames = {allNames} newFilter = {newFilter}/>
     </div>
   )
 
